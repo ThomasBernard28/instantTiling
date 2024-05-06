@@ -41,6 +41,16 @@ rotated_cube(C,F6,0,F1,90,F5,0,F3,270,F4,F2,0,3,1) :- cube(C,F1,F2,F3,F4,F5,F6).
 rotated_cube(C,F6,90,F4,90,F5,270,F2,270,F3,F1,0,3,2) :- cube(C,F1,F2,F3,F4,F5,F6).
 rotated_cube(C,F6,180,F3,90,F5,180,F1,270,F2,F4,0,3,3) :- cube(C,F1,F2,F3,F4,F5,F6).
 
+1 { cube_position(C, Pos, RX, RZ, RW) : rotated_cube(C,_,_,_,_,_,_,_,_,_,_,RX,RZ,RW) } 1 :- Pos=1..4.
+
+% There shouldn't be a same cube in two different positions.
+:- cube_position(C,Pos1,_,_,_), cube_position(C,Pos2,_,_,_), Pos1 != Pos2.
+% The shouldn't be two different cubes in the same position.
+:- cube_position(C1,Pos,_,_,_), cube_position(C2,Pos,_,_,_), C1 != C2.
+% There shouldn't be a same cube in two different rotations.
+:- cube_position(C,Pos,RX1,RZ1,RW1), cube_position(C,Pos,RX2,RZ2,RW2), RX1 != RX2, RZ1 != RZ2, RW1 != RW2.
+
+
 % Place the cubes on the stack.
 
 
@@ -49,7 +59,4 @@ rotated_cube(C,F6,180,F3,90,F5,180,F1,270,F2,F4,0,3,3) :- cube(C,F1,F2,F3,F4,F5,
 :- size(N), cube_position(C1,P,RX1,RY1,RW1), cube_position(C2,P+1,RX2,RY2,RW2), rotated_cube(C1,F1,R1,_,_,_,_,_,_,_,_,RX1,RY1,RW1), rotated_cube(C2,FB1,RB1,_,_,_,_,_,_,_,_,RX2,RY2,RW2),
 rotated_face(F1,N1,_,_,_,R1),rotated_face(FB1,_,_,S1,_,RB1), N1 != S1.
 
-% A cube must be used at most once once.
-:- cube_position(C1,P1,_,_), cube_position(C1,P2,_,_), P1 != P2.
-% A cube must be in only one rotation.
-:- cube_position(C1,_,R1,R3), cube_position(C1,_,R2,R4), R1 != R2, R3 != R4.
+#show cube_position/5.
