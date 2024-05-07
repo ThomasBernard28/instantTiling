@@ -44,6 +44,8 @@ rotated_cube(C,F6,180,F3,90,F5,180,F1,270,F2,F4,0,3,3) :- cube(C,F1,F2,F3,F4,F5,
 %In order to place the cubes on the stack
 1 { cube_position(C, Pos, RX, RZ, RW) : rotated_cube(C,_,_,_,_,_,_,_,_,_,_,RX,RZ,RW) } 1 :- size(N), Pos=1..N.
 
+% Two faces are matching if the north edge of the bottom face is equal to the south edge of the top face.
+matching(F1, F2, R1, R2):- rotated_face(F1, N1, E1, S1, W1, R1), rotated_face(F2, N2, E2, S2, W2,R2), N1 = S2.
 
 % There shouldn't be a same cube in two different positions.
 :- cube_position(C,Pos1,_,_,_), cube_position(C,Pos2,_,_,_), Pos1 != Pos2.
@@ -52,18 +54,21 @@ rotated_cube(C,F6,180,F3,90,F5,180,F1,270,F2,F4,0,3,3) :- cube(C,F1,F2,F3,F4,F5,
 % There shouldn't be a same cube in two different rotations.
 :- cube_position(C,Pos,RX1,RZ1,RW1), cube_position(C,Pos,RX2,RZ2,RW2), RX1 != RX2, RZ1 != RZ2, RW1 != RW2.
 
+% If a cube C2 is above a cube C1, then there shouldn't adjacent edges between the two cubes that aren't matching.
+% Here we consider the 4 visibles faces of each cubes.
 
-% Adjacent and visible edges from two different cubes must have matching numbers.
-% There are 2 cases to consider: matching with bottom cube and with top cube.
-:- size(N), cube_position(C1,P1,RX1,RY1,RW1), P1 = N, cube_position(C2,P2,RX2,RY2,RW2), P2 = P1+1, rotated_cube(C1,F1,R1,F2,R2,F3,R3,F4,R4,F5,F6,RX1,RY1,RW1),
-    rotated_cube(C2,FB1,RB1,FB2,RB2,FB3,RB3,FB4,RB4,FB5,FB6,RX2,RY2,RW2), rotated_face(F1,_,_,S1,_,R1), rotated_face(FB1,N1,_,_,_,RB1), N1 != S1,
-    rotated_face(F2,N2,_,_,_,R2), rotated_face(FB2,_,_,S2,_,RB2), rotated_face(F3,N3,_,_,_,R3), rotated_face(FB3,_,_,S3,_,RB3), rotated_face(F4,N4,_,_,_,R4),
-    rotated_face(FB4,_,_,S4,_,RB4), N2 != S2, N3 != S3, N4 != S4.
+% Front face
+:- cube_position(C1,P1,RX1,RY1,RW1), cube_position(C2,P2,RX2,RY2,RW2), P2=P1+1, rotated_cube(C1,F1,R1,_,_,_,_,_,_,_,_,RX1,RY1,RW1),
+    rotated_cube(C2,FB1,RB1,_,_,_,_,_,_,_,_,RX2,RY2,RW2), not matching(F1,FB1,R1,RB1).
+% Right face
+:- cube_position(C1,P1,RX1,RY1,RW1), cube_position(C2,P2,RX2,RY2,RW2), P2=P1+1, rotated_cube(C1,_,_,F2,R2,_,_,_,_,_,_,RX1,RY1,RW1),
+    rotated_cube(C2,_,_,FB2,RB2,_,_,_,_,_,_,RX2,RY2,RW2), not matching(F2,FB2,R2,RB2).
+% Back face
+:- cube_position(C1,P1,RX1,RY1,RW1), cube_position(C2,P2,RX2,RY2,RW2), P2=P1+1, rotated_cube(C1,F1,R1,_,_,F3,R3,_,_,_,_,RX1,RY1,RW1),
+    rotated_cube(C2,_,_,_,_,FB3,RB3,_,_,_,_,RX2,RY2,RW2), not matching(F3,FB3,R3,RB3).
+% Left face
+:- cube_position(C1,P1,RX1,RY1,RW1), cube_position(C2,P2,RX2,RY2,RW2), P2=P1+1, rotated_cube(C1,_,_,_,_,_,_,F4,R4,_,_,RX1,RY1,RW1),
+    rotated_cube(C2,_,_,_,_,_,_,FB4,RB4,_,_,RX2,RY2,RW2), not matching(F4,FB4,R4,RB4).
 
-
-% Adjacent and visible edges from two different cubes must have matching numbers.
-% Ecrire une contrainte de ce type pour chaque face ?
-%:- size(N), cube_position(C1,P,RX1,RY1,RW1), cube_position(C2,P+1,RX2,RY2,RW2), rotated_cube(C1,F1,R1,_,_,_,_,_,_,_,_,RX1,RY1,RW1), rotated_cube(C2,FB1,RB1,_,_,_,_,_,_,_,_,RX2,RY2,RW2),
-%rotated_face(F1,N1,_,_,_,R1),rotated_face(FB1,_,_,S1,_,RB1), N1 != S1.
 
 #show cube_position/5.
