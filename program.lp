@@ -70,5 +70,13 @@ matching(F1, F2, R1, R2):- rotated_face(F1, N1, E1, S1, W1, R1), rotated_face(F2
 :- cube_position(C1,P1,RX1,RY1,RW1), cube_position(C2,P2,RX2,RY2,RW2), P2=P1+1, rotated_cube(C1,_,_,_,_,_,_,F4,R4,_,_,RX1,RY1,RW1),
     rotated_cube(C2,_,_,_,_,_,_,FB4,RB4,_,_,RX2,RY2,RW2), not matching(F4,FB4,R4,RB4).
 
+% Compute the total number of rotations for a cube
+total_rotations(Cube, Total):- cube_position(Cube,_,RX,RZ,RW), Total = RX + RZ + RW.
+
+solution_total_rotations(SumTotal) :- SumTotal = #sum { Total, Cube : total_rotations(Cube,Total) }.
+
+% The objective is to minimize the total number of rotations for all cubes.
+#minimize { SumTotal : solution_total_rotations(SumTotal) }.
+
 
 #show cube_position/5.
