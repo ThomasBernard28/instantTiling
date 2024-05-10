@@ -1,6 +1,8 @@
-% ------------------- GENERATOR -------------------
-% input : size of stack and numbers of cube to generate size(N), range for numbers range(N)
-% Output : generated cube and face facts.
+% ------------------- RANDOM GENERATOR -------------------
+
+% Randomly choose a value of size(N) and range(M).
+{size(N) : N = 3..9} = 1.
+{range(M) : M = 1..4} = 1.
 
 % Generate cube IDs from 1 to N
 cube_id(1..N) :- size(N).
@@ -58,5 +60,7 @@ matching(F1, F2):- face(F1, N1, E1, S1, W1), face(F2, N2, E2, S2, W2), N1 = S2.
 
 
 % Output
+#show size/1.
+#show range/1.
 #show cube/7.
 #show face/5.
