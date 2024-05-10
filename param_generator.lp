@@ -1,3 +1,6 @@
+size(4).
+range(4).
+
 % ------------------- GENERATOR -------------------
 % input : size of stack and numbers of cube to generate size(N), range for numbers range(N)
 % Output : generated cube and face facts.
@@ -33,9 +36,30 @@ face_in_cube(CubeId, FaceIndex) :-
 
 % Ensure each face is assigned to a unique cube
 :- face_in_cube(CubeId1, F), face_in_cube(CubeId2, F), CubeId1 != CubeId2.
+% ----------------------------------------------------
+1 { cube_position(C, Pos) : cube(C,_,_,_,_,_,_) } 1 :- size(N), Pos=1..N.
+
+matching(F1, F2):- face(F1, N1, E1, S1, W1), face(F2, N2, E2, S2, W2), N1 = S2.
+
+% There shouldn't be a same cube in two different positions.
+:- cube_position(C,Pos1), cube_position(C,Pos2), Pos1 != Pos2.
+% The shouldn't be two different cubes in the same position.
+:- cube_position(C1,Pos), cube_position(C2,Pos), C1 != C2.
+
+% Front face
+:- cube_position(C1,P1), cube_position(C2,P2), P2=P1+1, cube(C1,F1,_,_,_,_,_),
+    cube(C2,FB1,_,_,_,_,_), not matching(F1,FB1).
+% Right face
+:- cube_position(C1,P1), cube_position(C2,P2), P2=P1+1, cube(C1,_,F2,_,_,_,_),
+    cube(C2,_,FB2,_,_,_,_), not matching(F2,FB2).
+% Back face
+:- cube_position(C1,P1), cube_position(C2,P2), P2=P1+1, cube(C1,F1,_,F3,_,_,_),
+    cube(C2,_,_,FB3,_,_,_), not matching(F3,FB3).
+% Left face
+:- cube_position(C1,P1), cube_position(C2,P2), P2=P1+1, cube(C1,_,_,_,F4,_,_),
+    cube(C2,_,_,_,FB4,_,_), not matching(F4,FB4).
+
 
 % Output
 #show cube/7.
 #show face/5.
-
-% ---------------------------------------------------
