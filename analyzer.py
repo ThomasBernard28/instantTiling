@@ -46,6 +46,6 @@ def analyze_puzzles(puzzles):
 
 
 if __name__ == "__main__":
-    puzzles  = ["program.db"]
+    puzzles  = ["program_gen3.db", "program_gen4.db", "program_gen5.db", "program_gen6.db", "program_gen7.db", "program_gen8.db", "program_gen9.db"]
     puzzles_results = analyze_puzzles(puzzles)
     print(puzzles_results)

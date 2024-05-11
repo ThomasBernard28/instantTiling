@@ -1,8 +1,8 @@
 % ------------------- GENERATOR -------------------
 % input : size of stack and numbers of cube to generate size(N), range for numbers range(N)
 % Output : generated cube and face facts.
-size(6).
-range(6).
+size(1).
+range(4).
 % Generate cube IDs from 1 to N
 cube_id(1..N) :- size(N).
 
